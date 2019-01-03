@@ -12,10 +12,8 @@ const Enemy = function(x, y, speed) {
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
     this.x += this.speed * dt;
+
 };
 
 // Draw the enemy on the screen, required method for game
@@ -49,26 +47,31 @@ Player.prototype.handleInput = function(keyPress) {
     if (keyPress == 'up' && this.y > 0) {
         this.y -= 83;
     }
-    if (keyPress == 'right' && this.x < 405){
+    if (keyPress == 'right' && this.x < 400){
         this.x += 101;
     }
-    if (keyPress == 'down' && this.y < 405) {
+    if (keyPress == 'down' && this.y < 400) {
         this.y += 83;
     }
     //when player got to the top, the new game starts
-    if (this.y == 0) {
-        setTimeout(function() {
+    if (this.y <= 0) {
+        setTimeout(() => {
             new Player(200, 400);
         }, 500);
     }
 };
 
-
-
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 const allEnemies = [new Enemy()];
-const enemyLocation = [83, 166, 249];
+const enemyLocation = [78, 160, 245];
+
+// New enemies are created when enemy hit the right side of the canvas
+enemyLocation.forEach((y) => {
+    enemy = new Enemy(0, y, 200);
+    allEnemies.push(enemy);
+})
+
 // Place the player object in a variable called player
 // provide the original position x and y
 const player = new Player(200, 400);
