@@ -1,7 +1,5 @@
 // Enemies our player must avoid
 const Enemy = function(x, y, speed) {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
     this.x = x;
     this.y = y;
     this.speed = speed;
@@ -11,9 +9,12 @@ const Enemy = function(x, y, speed) {
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
+Enemy.prototype.update = function(dt){
     this.x += this.speed * dt;
 
+    //provide random speed to enemies
+    this.speed = Math.floor(Math.random()* 455) + 1;
+  
 };
 
 // Draw the enemy on the screen, required method for game
@@ -41,35 +42,49 @@ Player.prototype.render = function() {
 
 // player moves each grid when keypress happens
 Player.prototype.handleInput = function(keyPress) {
-    if (keyPress == 'left' && this.x > 0){
-        this.x -= 101;
-    }
-    if (keyPress == 'up' && this.y > 0) {
+    switch(keyPress) {
+    case 'left':
+        if (this.x > 0) {
+            this.x -= 101;
+        };
+        break;
+    case 'up':
+        if (this.y > 0) {
         this.y -= 83;
-    }
-    if (keyPress == 'right' && this.x < 400){
+        };
+        break;
+    case 'right':
+        if (this.x < 400){
         this.x += 101;
-    }
-    if (keyPress == 'down' && this.y < 400) {
+        };
+        break;
+    case 'down':
+        if (this.y < 400){
         this.y += 83;
-    }
-    //when player got to the top, the new game starts
-    if (this.y <= 0) {
-        setTimeout(() => {
-            new Player(200, 400);
-        }, 500);
+        };
+        break;
     }
 };
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-const allEnemies = [new Enemy()];
-const enemyLocation = [78, 160, 245];
+//when player got to the top, the new game starts
+if (this.y <= 0) {
+    setTimeout(() => {
+        new Player(200, 400);
+    }, 500);
 
-// New enemies are created when enemy hit the right side of the canvas
-enemyLocation.forEach((y) => {
-    enemy = new Enemy(0, y, 200);
-    allEnemies.push(enemy);
+}
+
+
+// Place all enemy objects in an array called allEnemies
+const allEnemies = [];
+
+// each enemy's location on the path (y axis)
+const enemyLocation = [65, 145, 230];
+
+// enemy will be repeatedly created
+enemyLocation.forEach(function(y) {
+    enemy = new Enemy(0, y ,200);
+    allEnemies.push(enemy)
 })
 
 // Place the player object in a variable called player
