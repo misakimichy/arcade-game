@@ -14,11 +14,15 @@ Enemy.prototype.update = function(dt){
 
     //when enemy goes off the screen, enemy comes back to x = 0
     if (this.x >= 505) {
-        this.x = 0;
+        this.x = -10;
+        this.enemySpeed();
     }
     this.checkCollision();
 };
 
+Enemy.prototype.enemySpeed = function() {
+    this.speed = Math.floor(Math.random() * 250 + 100);
+};
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -26,9 +30,11 @@ Enemy.prototype.render = function() {
 };
 
 // add collision rule
+// To Do: fix the collision rule when the bottom enemy passes above the enemy
+// To Do : fix when the player hits the top enemy
 Enemy.prototype.checkCollision = function() {
     const playerSize = {x: player.x, y: player.y, width: 50, height: 40};
-    const enemySize = {x: this.x, y: this.y, width:60, height: 50};
+    const enemySize = {x: this.x, y: this.y, width:50, height: 30};
     if (playerSize.x < enemySize.x + enemySize.width &&
         playerSize.x + playerSize.width > enemySize.x &&
         playerSize.y > enemySize.y + enemySize.height &&
@@ -137,3 +143,7 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+
+// to do list for additional
+// add three lives and every time collision happened, player looses one life
