@@ -16,6 +16,7 @@ Enemy.prototype.update = function(dt){
     if (this.x >= 505) {
         this.x = 0;
     }
+    this.checkCollision();
 };
 
 
@@ -23,6 +24,23 @@ Enemy.prototype.update = function(dt){
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
+
+// add collision rule
+Enemy.prototype.checkCollision = function() {
+    const playerSize = {x: player.x, y: player.y, width: 50, height: 40};
+    const enemySize = {x: this.x, y: this.y, width:60, height: 50};
+    if (playerSize.x < enemySize.x + enemySize.width &&
+        playerSize.x + playerSize.width > enemySize.x &&
+        playerSize.y > enemySize.y + enemySize.height &&
+        playerSize.y + playerSize.height > enemySize.y){
+            this.collisionHappened();
+    }
+};
+
+Enemy.prototype.collisionHappened = function() {
+    player.playerLives -= 1;
+    player.reset();
+}
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -47,7 +65,7 @@ Player.prototype.handleInput = function(keyPress) {
     switch(keyPress) {
     case 'left':
         if (this.x > 0) {
-            this.x -= 100;
+            this.x -= 101;
         };
         break;
     case 'up':
@@ -57,7 +75,7 @@ Player.prototype.handleInput = function(keyPress) {
         break;
     case 'right':
         if (this.x < 400){
-        this.x += 100;
+        this.x += 101;
         };
         break;
     case 'down':
