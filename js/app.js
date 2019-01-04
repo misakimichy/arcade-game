@@ -12,10 +12,12 @@ const Enemy = function(x, y, speed) {
 Enemy.prototype.update = function(dt){
     this.x += this.speed * dt;
 
-    //provide random speed to enemies
-    this.speed = Math.floor(Math.random()* 455) + 1;
-  
+    //when enemy goes off the screen, enemy comes back to x = 0
+    if (this.x >= 505) {
+        this.x = 0;
+    }
 };
+
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -45,7 +47,7 @@ Player.prototype.handleInput = function(keyPress) {
     switch(keyPress) {
     case 'left':
         if (this.x > 0) {
-            this.x -= 101;
+            this.x -= 100;
         };
         break;
     case 'up':
@@ -55,7 +57,7 @@ Player.prototype.handleInput = function(keyPress) {
         break;
     case 'right':
         if (this.x < 400){
-        this.x += 101;
+        this.x += 100;
         };
         break;
     case 'down':
@@ -66,12 +68,23 @@ Player.prototype.handleInput = function(keyPress) {
     }
 };
 
+Player.prototype.reset = function() {
 //when player got to the top, the new game starts
-if (this.y <= 0) {
-    setTimeout(() => {
-        new Player(200, 400);
-    }, 500);
+    this.x = 200;
+    this.y = 400;
+};
 
+
+//add function to reset game when player hit an enemy
+function gameReset() {
+    player.reset();
+    score = 0;
+    updateDisplay();
+    allEnemies = [];
+    allEnemies.push(
+        new Enemy(0, Math.random() * 150 + 100),
+        new Enemy(0, Math.random() * 150 + 150)
+    );
 }
 
 
@@ -86,6 +99,8 @@ enemyLocation.forEach(function(y) {
     enemy = new Enemy(0, y ,200);
     allEnemies.push(enemy)
 })
+
+
 
 // Place the player object in a variable called player
 // provide the original position x and y
