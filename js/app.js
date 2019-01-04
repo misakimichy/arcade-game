@@ -28,6 +28,11 @@ Enemy.prototype.enemySpeed = function() {
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.fillStyle = "black";
+    ctx.font = "20px Helvetica"
+    ctx.fillText("Lives:" + player.playerScore, 20, 30);
+    ctx.fillText("Score:"  + player.playerLives, 220, 30);
+    ctx.fillText("Level:" + this.speedLevel, 420, 30);
 };
 
 // add collision rule
@@ -128,7 +133,7 @@ const allEnemies = [];
 for (let i = 0; i < 3; i++) {
     // set random start speed
     let startSpeed = this.speedLevel * Math.floor(Math.random()* 100 + 1);
-    allEnemies.push(new Enemy(0, (85 * i), startSpeed))
+    allEnemies.push(new Enemy(-100, 60 + (85 * i), startSpeed))
 }
 
 // each enemy's location on the path (y axis)
