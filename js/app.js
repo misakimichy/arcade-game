@@ -4,13 +4,14 @@ const Enemy = function(x, y, speed) {
     this.y = y;
     this.speed = speed;
     this.sprite = 'images/enemy-bug.png';
+    this.speedLevel = 1;
 };
 
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt){
-    this.x += this.speed * dt;
+   this.x += this.speed * dt;
 
     //when enemy goes off the screen, enemy comes back to x = 0
     if (this.x >= 505) {
@@ -21,7 +22,7 @@ Enemy.prototype.update = function(dt){
 };
 
 Enemy.prototype.enemySpeed = function() {
-    this.speed = Math.floor(Math.random() * 250 + 100);
+    this.speed = this.speedLevel * Math.floor(Math.random() * 350 + 150);
 };
 
 // Draw the enemy on the screen, required method for game
@@ -34,7 +35,7 @@ Enemy.prototype.render = function() {
 // To Do : fix when the player hits the top enemy
 Enemy.prototype.checkCollision = function() {
     const playerSize = {x: player.x, y: player.y, width: 50, height: 40};
-    const enemySize = {x: this.x, y: this.y, width:50, height: 30};
+    const enemySize = {x: this.x, y: this.y, width:60, height: 70};
     if (playerSize.x < enemySize.x + enemySize.width &&
         playerSize.x + playerSize.width > enemySize.x &&
         playerSize.y > enemySize.y + enemySize.height &&
@@ -56,10 +57,14 @@ const Player = function(x, y) {
     this.x = x;
     this.y = y;
     this.sprite = 'images/char-boy.png';
+    this.playerLives = 3;
+    this.playerScore = 0;
 };
 
 Player.prototype.update = function(dt) {
-
+    if (this.playerLives === 0) {
+        this.reset();
+    }
 };
 
 Player.prototype.render = function() {
@@ -98,37 +103,42 @@ Player.prototype.reset = function() {
     this.y = 400;
 };
 
+Player.prototype.goal = function() {
+    this.playerScore += 30;
+    this.speedLevel += 30;
+    this.reset();
 
-//add function to reset game when player hit an enemy
+}
+
+
+// add function to reset game when player hit an enemy
 function gameReset() {
     player.reset();
     score = 0;
     updateDisplay();
     allEnemies = [];
     allEnemies.push(
-        new Enemy(0, Math.random() * 150 + 100),
-        new Enemy(0, Math.random() * 150 + 150)
+        new Enemy(0, Math.random() * 350 + 100)
     );
 }
 
 
 // Place all enemy objects in an array called allEnemies
 const allEnemies = [];
+for (let i = 0; i < 3; i++) {
+    // set random start speed
+    let startSpeed = this.speedLevel * Math.floor(Math.random()* 100 + 1);
+    allEnemies.push(new Enemy(0, (85 * i), startSpeed))
+}
 
 // each enemy's location on the path (y axis)
 const enemyLocation = [65, 145, 230];
-
-// enemy will be repeatedly created
-enemyLocation.forEach(function(y) {
-    enemy = new Enemy(0, y ,200);
-    allEnemies.push(enemy)
-})
 
 
 
 // Place the player object in a variable called player
 // provide the original position x and y
-const player = new Player(200, 400);
+const player = new Player(202, 400);
 
 
 // This listens for key presses and sends the keys to your
