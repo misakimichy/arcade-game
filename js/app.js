@@ -29,19 +29,18 @@ Enemy.prototype.render = function() {
     ctx.fillText("Level: " + this.speedLevel, 420, 30);
 };
 
-// add collision rule
-// To Do: fix the collision rule when the bottom enemy passes above the enemy
-// To Do : fix when the player hits the top enemy
+// Enemy and player should be in the same row (y axis)
+// x + some px < player.X (x axis, left side of player)
+// or x > player.x+30 (x axis, right side of player)
+// Then collision happens
 Enemy.prototype.checkCollisions = function() {
-    const playerSize = {x: player.x, y: player.y, width: 40, height: 40};
-    const enemySize = {x: this.x, y: this.y, width: 15, height: 20};
-    if (playerSize.x < enemySize.x + enemySize.width &&
-        playerSize.x + playerSize.width > enemySize.x &&
-        playerSize.y > enemySize.y + enemySize.height &&
-        playerSize.y + playerSize.height > enemySize.y){
-            this.collisionHappened();
-    }
-};
+        if (this.y === player.y && 
+            this.x + 60 > player.x &&
+            this.x < player.x + 30) {
+                this.collisionHappened();
+            }
+}
+
 
 Enemy.prototype.collisionHappened = function() {
     player.playerLives -= 1;
@@ -55,7 +54,7 @@ Enemy.prototype.collisionHappened = function() {
 // Player doesn't need speed because player moves depends on the keypress event
 const Player = function(x, y) {
     this.xMove = 101;
-    this.yMove = 78;
+    this.yMove = 80;
     this.xStart = this.xMove * 2;
     this.yStart = this.yMove * 5;
     this.x = this.xStart;
@@ -66,10 +65,19 @@ const Player = function(x, y) {
     this.sprite = 'images/char-boy.png';
 };
 
-Player.prototype.update = function(dt) {
-    if (this.playerLives === 0) {
-        this.reset();
+// check player's position
+Player.prototype.update = function() {
+    for(let enemy of allEnemies) {
+        if (this.y === enemy.y) {
+          
+        }
+        
     }
+
+
+    // if (this.playerLives === 0) {
+    //     this.reset();
+    // }
 };
 
 Player.prototype.render = function() {
@@ -129,9 +137,9 @@ function gameReset() {
 
 
 
-const bug1 = new Enemy(-101, 65, 100);
-const bug2 = new Enemy(-101, 145, 50);
-const bug3 = new Enemy(-101, 230, 80);
+const bug1 = new Enemy(-101, 80, 100);
+const bug2 = new Enemy(-101, 160, 50);
+const bug3 = new Enemy(-101, 240, 80);
 // Place all enemy objects in an array called allEnemies
 const allEnemies = [];
 allEnemies.push(bug1, bug2, bug3);
