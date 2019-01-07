@@ -11,36 +11,30 @@ const Enemy = function(x, y, speed) {
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt){
-   this.x += this.speed * dt;
-
     //when enemy goes off the screen, enemy comes back to x = 0
-    if (this.x >= 505) {
-        this.x = -10;
-        this.enemySpeed();
-    }
-    this.checkCollision();
+    if (this.x < 505) {
+        this.x += this.speedLevel * this.speed * Math.floor(Math.random()* 5 + 1) * dt;
+    } 
+    this.checkCollisions();
 };
 
-Enemy.prototype.enemySpeed = function() {
-    this.speed = this.speedLevel * Math.floor(Math.random() * 350 + 150);
-};
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     ctx.fillStyle = "black";
     ctx.font = "20px Helvetica"
-    ctx.fillText("Lives:" + player.playerScore, 20, 30);
-    ctx.fillText("Score:"  + player.playerLives, 220, 30);
-    ctx.fillText("Level:" + this.speedLevel, 420, 30);
+    ctx.fillText("Life: " + player.playerLives, 20, 30);
+    ctx.fillText("Score: "  + player.playerScore, 220, 30);
+    ctx.fillText("Level: " + this.speedLevel, 420, 30);
 };
 
 // add collision rule
 // To Do: fix the collision rule when the bottom enemy passes above the enemy
 // To Do : fix when the player hits the top enemy
-Enemy.prototype.checkCollision = function() {
-    const playerSize = {x: player.x, y: player.y, width: 50, height: 40};
-    const enemySize = {x: this.x, y: this.y, width:60, height: 70};
+Enemy.prototype.checkCollisions = function() {
+    const playerSize = {x: player.x, y: player.y, width: 40, height: 40};
+    const enemySize = {x: this.x, y: this.y, width: 15, height: 20};
     if (playerSize.x < enemySize.x + enemySize.width &&
         playerSize.x + playerSize.width > enemySize.x &&
         playerSize.y > enemySize.y + enemySize.height &&
@@ -57,13 +51,19 @@ Enemy.prototype.collisionHappened = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
+
 // Player doesn't need speed because player moves depends on the keypress event
 const Player = function(x, y) {
-    this.x = x;
-    this.y = y;
-    this.sprite = 'images/char-boy.png';
+    this.xMove = 101;
+    this.yMove = 78;
+    this.xStart = this.xMove * 2;
+    this.yStart = this.yMove * 5;
+    this.x = this.xStart;
+    this.y = this.yStart;
+
     this.playerLives = 3;
     this.playerScore = 0;
+    this.sprite = 'images/char-boy.png';
 };
 
 Player.prototype.update = function(dt) {
@@ -76,27 +76,27 @@ Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// player moves each grid when keypress happens
+// player moves a block when keypress happens
 Player.prototype.handleInput = function(keyPress) {
     switch(keyPress) {
     case 'left':
         if (this.x > 0) {
-            this.x -= 101;
+            this.x -= this.xMove;
         };
         break;
     case 'up':
         if (this.y > 0) {
-        this.y -= 83;
+        this.y -= this.yMove;
         };
         break;
     case 'right':
-        if (this.x < 400){
-        this.x += 101;
+        if (this.x < this.xMove * 4){
+        this.x += this.xMove;
         };
         break;
     case 'down':
-        if (this.y < 400){
-        this.y += 83;
+        if (this.y < this.yMove * 5){
+        this.y += this.yMove;
         };
         break;
     }
@@ -104,23 +104,23 @@ Player.prototype.handleInput = function(keyPress) {
 
 Player.prototype.reset = function() {
 //when player got to the top, the new game starts
-    this.x = 200;
-    this.y = 400;
+    this.x = this.xStart;
+    this.y = this.yStart;
 };
 
 Player.prototype.goal = function() {
     this.playerScore += 30;
     this.speedLevel += 30;
     this.reset();
-
 }
 
 
 // add function to reset game when player hit an enemy
 function gameReset() {
     player.reset();
-    score = 0;
-    updateDisplay();
+    player.playerScore = 0;
+    player.speedLevel = 0;
+    player.playerLives = 3;
     allEnemies = [];
     allEnemies.push(
         new Enemy(0, Math.random() * 350 + 100)
@@ -128,22 +128,20 @@ function gameReset() {
 }
 
 
+
+const bug1 = new Enemy(-101, 65, 100);
+const bug2 = new Enemy(-101, 145, 50);
+const bug3 = new Enemy(-101, 230, 80);
 // Place all enemy objects in an array called allEnemies
 const allEnemies = [];
+allEnemies.push(bug1, bug2, bug3);
 for (let i = 0; i < 3; i++) {
     // set random start speed
     let startSpeed = this.speedLevel * Math.floor(Math.random()* 100 + 1);
     allEnemies.push(new Enemy(-100, 60 + (85 * i), startSpeed))
 }
 
-// each enemy's location on the path (y axis)
-const enemyLocation = [65, 145, 230];
-
-
-
-// Place the player object in a variable called player
-// provide the original position x and y
-const player = new Player(202, 400);
+const player = new Player(this.xStart, this.yStart);
 
 
 // This listens for key presses and sends the keys to your
