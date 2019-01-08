@@ -3,8 +3,10 @@ const Enemy = function(x, y, speed) {
     this.x = x;
     this.y = y;
     this.speed = speed;
+
+    this.speedLevel = 0;
+
     this.sprite = 'images/enemy-bug.png';
-    this.speedLevel = 1;
 };
 
 
@@ -13,8 +15,11 @@ const Enemy = function(x, y, speed) {
 Enemy.prototype.update = function(dt){
     //when enemy goes off the screen, enemy comes back to x = 0
     if (this.x < 505) {
-        this.x += this.speedLevel * this.speed * Math.floor(Math.random()* 5 + 1) * dt;
-    } 
+        this.x += this.speed * Math.floor(Math.random()* 5 + 1) * dt + this.speedLevel;
+    } else {
+        this.x = -101;
+    }
+    
     this.checkCollisions();
 };
 
@@ -23,10 +28,10 @@ Enemy.prototype.update = function(dt){
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     ctx.fillStyle = "black";
-    ctx.font = "20px Helvetica"
+    ctx.font = "20px Helvetica";
     ctx.fillText("Life: " + player.playerLives, 20, 30);
     ctx.fillText("Score: "  + player.playerScore, 220, 30);
-    ctx.fillText("Level: " + this.speedLevel, 420, 30);
+    ctx.fillText("Level: " + player.playerLevel, 420, 30);
 };
 
 // collision area:
@@ -40,13 +45,13 @@ Enemy.prototype.checkCollisions = function() {
     //     //check player's winning condition
     //     player.goal();
     }
-}
+};
 
 //When collision happens, player loses a life and back to the start position.
 Enemy.prototype.collisionHappened = function() {
     player.playerLives -= 1;
     player.reset();
-}
+};
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -64,20 +69,18 @@ const Player = function(x, y) {
 
     this.playerLives = 3;
     this.playerScore = 0;
+    this.playerLevel = 1;
     this.sprite = 'images/char-boy.png';
 };
 
 // check player's position
 Player.prototype.update = function() {
-    // To Do: call checkCollisions()
-    
     // Check win condition
     // player get to the y <80 which is 1st row
-    if (this.y < 50) {
+    if (this.y === 0) {
         this.win = true;
         this.goal();
     }
-
 };
 
 Player.prototype.render = function() {
@@ -120,23 +123,24 @@ Player.prototype.reset = function() {
 // Player earn score and level would goes up
 // Player automatically goes back to the starting position
 Player.prototype.goal = function() {
-    this.playerScore += 30;
-    this.speedLevel += 30;
-    this.reset();
-}
+    if (this.playerLevel < 5){
+        enemy.speedLevel += 100;
+        this.playerScore += 30;
+        this.playerLevel ++ ;
+        this.reset();
+    } else if (this.playerLevel < 15) {
+        enemy.speedLevel += 200;
+        this.playerScore += 50;
+        this.playerLevel ++ ;
+        this.reset();
+    } else {
+        enemy.speedLevel += 500;
+        this.playerScore += 80;
+        this.playerLevel ++ ;
+        this.reset();
+    };
 
-
-// add function to reset game when player hit an enemy
-// function gameReset() {
-//     player.reset();
-//     player.playerScore = 0;
-//     player.speedLevel = 0;
-//     player.playerLives = 3;
-//     allEnemies = [];
-//     allEnemies.push(
-//         new Enemy(0, Math.random() * 350 + 100)
-//     );
-// }
+};
 
 
 const bug1 = new Enemy(-101, 80, 100);
