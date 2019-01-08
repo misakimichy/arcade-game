@@ -15,7 +15,6 @@ Enemy.prototype.update = function(dt){
     if (this.x < 505) {
         this.x += this.speedLevel * this.speed * Math.floor(Math.random()* 5 + 1) * dt;
     } 
-    this.checkCollisions();
 };
 
 
@@ -29,23 +28,21 @@ Enemy.prototype.render = function() {
     ctx.fillText("Level: " + this.speedLevel, 420, 30);
 };
 
+// collision area:
 // Enemy and player should be in the same row (y axis)
 // x + some px < player.X (x axis, left side of player)
-// or x > player.x+30 (x axis, right side of player)
-// Then collision happens
+// or x > player.x + some px (x axis, right side of player)
 Enemy.prototype.checkCollisions = function() {
-        if (this.y === player.y && 
-            this.x + 60 > player.x &&
-            this.x < player.x + 30) {
-                this.collisionHappened();
-            }
-}
+    if (this.y === player.y && this.x + 60 > player.x && this.x < player.x + 30) {
+        this.collisionHappened();
+    }
+};
 
-
+//When collision happens, player loses a life and back to the start position.
 Enemy.prototype.collisionHappened = function() {
     player.playerLives -= 1;
     player.reset();
-}
+};
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -67,17 +64,12 @@ const Player = function(x, y) {
 
 // check player's position
 Player.prototype.update = function() {
-    for(let enemy of allEnemies) {
-        if (this.y === enemy.y) {
-          
-        }
-        
-    }
 
+    Enemy.checkCollisions();
 
-    // if (this.playerLives === 0) {
-    //     this.reset();
-    // }
+    //check if player made it to the river
+    
+    player.goal();
 };
 
 Player.prototype.render = function() {
@@ -110,12 +102,15 @@ Player.prototype.handleInput = function(keyPress) {
     }
 };
 
+// reset player's position
 Player.prototype.reset = function() {
-//when player got to the top, the new game starts
     this.x = this.xStart;
     this.y = this.yStart;
 };
 
+// When player made to the river,
+// Player earn score and level would goes up
+// Player automatically goes back to the starting position
 Player.prototype.goal = function() {
     this.playerScore += 30;
     this.speedLevel += 30;
@@ -124,16 +119,16 @@ Player.prototype.goal = function() {
 
 
 // add function to reset game when player hit an enemy
-function gameReset() {
-    player.reset();
-    player.playerScore = 0;
-    player.speedLevel = 0;
-    player.playerLives = 3;
-    allEnemies = [];
-    allEnemies.push(
-        new Enemy(0, Math.random() * 350 + 100)
-    );
-}
+// function gameReset() {
+//     player.reset();
+//     player.playerScore = 0;
+//     player.speedLevel = 0;
+//     player.playerLives = 3;
+//     allEnemies = [];
+//     allEnemies.push(
+//         new Enemy(0, Math.random() * 350 + 100)
+//     );
+// }
 
 
 
