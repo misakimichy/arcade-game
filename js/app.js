@@ -139,18 +139,12 @@ Player.prototype.goal = function() {
 // }
 
 
-
 const bug1 = new Enemy(-101, 80, 100);
 const bug2 = new Enemy(-101, 160, 50);
 const bug3 = new Enemy(-101, 240, 80);
 // Place all enemy objects in an array called allEnemies
 const allEnemies = [];
 allEnemies.push(bug1, bug2, bug3);
-for (let i = 0; i < 3; i++) {
-    // set random start speed
-    let startSpeed = this.speedLevel * Math.floor(Math.random()* 100 + 1);
-    allEnemies.push(new Enemy(-100, 60 + (85 * i), startSpeed))
-}
 
 const player = new Player(this.xStart, this.yStart);
 
