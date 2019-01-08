@@ -15,6 +15,7 @@ Enemy.prototype.update = function(dt){
     if (this.x < 505) {
         this.x += this.speedLevel * this.speed * Math.floor(Math.random()* 5 + 1) * dt;
     } 
+    this.checkCollisions();
 };
 
 
@@ -35,14 +36,17 @@ Enemy.prototype.render = function() {
 Enemy.prototype.checkCollisions = function() {
     if (this.y === player.y && this.x + 60 > player.x && this.x < player.x + 30) {
         this.collisionHappened();
+    // } else {
+    //     //check player's winning condition
+    //     player.goal();
     }
-};
+}
 
 //When collision happens, player loses a life and back to the start position.
 Enemy.prototype.collisionHappened = function() {
     player.playerLives -= 1;
     player.reset();
-};
+}
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -56,6 +60,7 @@ const Player = function(x, y) {
     this.yStart = this.yMove * 5;
     this.x = this.xStart;
     this.y = this.yStart;
+    this.win = false;
 
     this.playerLives = 3;
     this.playerScore = 0;
@@ -64,12 +69,15 @@ const Player = function(x, y) {
 
 // check player's position
 Player.prototype.update = function() {
-
-    Enemy.checkCollisions();
-
-    //check if player made it to the river
+    // To Do: call checkCollisions()
     
-    player.goal();
+    // Check win condition
+    // player get to the y <80 which is 1st row
+    if (this.y < 50) {
+        this.win = true;
+        this.goal();
+    }
+
 };
 
 Player.prototype.render = function() {
