@@ -4,8 +4,6 @@ const Enemy = function(x, y, speed) {
     this.y = y;
     this.speed = speed;
 
-    this.speedLevel = 0;
-
     this.sprite = 'images/enemy-bug.png';
 };
 
@@ -15,7 +13,7 @@ const Enemy = function(x, y, speed) {
 Enemy.prototype.update = function(dt){
     //when enemy goes off the screen, enemy comes back to x = 0
     if (this.x < 505) {
-        this.x += this.speed * Math.floor(Math.random()* 5 + 1) * dt + this.speedLevel;
+        this.x += this.speed * Math.floor(Math.random()* 5 + 1) * dt + player.speedLevel;
     } else {
         this.x = -101;
     }
@@ -58,18 +56,20 @@ Enemy.prototype.collisionHappened = function() {
 // a handleInput() method.
 
 // Player doesn't need speed because player moves depends on the keypress event
-const Player = function(x, y) {
+const Player = function(x, y, allEnemies) {
     this.xMove = 101;
     this.yMove = 80;
     this.xStart = this.xMove * 2;
     this.yStart = this.yMove * 5;
     this.x = this.xStart;
     this.y = this.yStart;
+    this.allEnemies = allEnemies;
     this.win = false;
 
     this.playerLives = 3;
     this.playerScore = 0;
     this.playerLevel = 1;
+    this.speedLevel = 1;
     this.sprite = 'images/char-boy.png';
 };
 
@@ -123,34 +123,38 @@ Player.prototype.reset = function() {
 // Player earn score and level would goes up
 // Player automatically goes back to the starting position
 Player.prototype.goal = function() {
-    if (this.playerLevel < 5){
-        enemy.speedLevel += 100;
+
+    if (this.playerLevel < 3){
         this.playerScore += 30;
         this.playerLevel ++ ;
+        this.speedLevel += 0.3;
         this.reset();
-    } else if (this.playerLevel < 15) {
-        enemy.speedLevel += 200;
-        this.playerScore += 50;
-        this.playerLevel ++ ;
-        this.reset();
-    } else {
-        enemy.speedLevel += 500;
+    } else if (this.playerLevel < 5) {
         this.playerScore += 80;
         this.playerLevel ++ ;
+        this.speedLevel += 0.5;
+        console.log(this.speedLevel);
+        const bug4 = new Enemy(50, 80, 1);
+        allEnemies.push(bug4);
+        this.reset();
+    } else {
+        this.playerScore += 130;
+        this.playerLevel ++ ;
+        this.speedLevel += 0.8;
+        console.log(this.speedLevel);
         this.reset();
     };
-
 };
 
+const bug1 = new Enemy(-101, 80, 30);
+const bug2 = new Enemy(-101, 160, 10);
+const bug3 = new Enemy(-101, 240, 15);
 
-const bug1 = new Enemy(-101, 80, 100);
-const bug2 = new Enemy(-101, 160, 50);
-const bug3 = new Enemy(-101, 240, 80);
 // Place all enemy objects in an array called allEnemies
 const allEnemies = [];
 allEnemies.push(bug1, bug2, bug3);
 
-const player = new Player(this.xStart, this.yStart);
+const player = new Player(this.xStart, this.yStart, allEnemies);
 
 
 // This listens for key presses and sends the keys to your
