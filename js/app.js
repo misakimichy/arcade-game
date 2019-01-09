@@ -17,7 +17,6 @@ Enemy.prototype.update = function(dt){
     } else {
         this.x = -101;
     }
-    
     this.checkCollisions();
 };
 
@@ -57,8 +56,6 @@ Enemy.prototype.collisionHappened = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-
-// Player doesn't need speed because player moves depends on the keypress event
 const Player = function(x, y, allEnemies) {
     this.xMove = 101;
     this.yMove = 80;
@@ -68,7 +65,6 @@ const Player = function(x, y, allEnemies) {
     this.y = this.yStart;
     this.allEnemies = allEnemies;
     this.win = false;
-    // this.star = star;
 
     this.playerLives = 3;
     this.playerScore = 0;
@@ -117,52 +113,42 @@ Player.prototype.handleInput = function(keyPress) {
     }
 };
 
+
+// When player made to the river,
+// Player earn score depends on the player level
+// Add enemies's speed level every time the player wins
+// Player automatically goes back to the starting position
+Player.prototype.gameLevel = function() {
+    if (this.playerLevel < 3){
+        this.playerScore += 30;
+        this.speedLevel += 0.2;
+        
+    } else if (this.playerLevel < 5) {
+        this.playerScore += 80;
+        this.speedLevel += 0.4;
+        const bug4 = new Enemy(50, 80, 0.8);
+        allEnemies.push(bug4);
+    
+    } else {
+        this.playerScore += 130;
+        this.speedLevel += 0.6;  
+    };
+    this.playerLevel ++ ;
+    this.reset();
+};
+
 // reset player's position
 Player.prototype.reset = function() {
     this.x = this.xStart;
     this.y = this.yStart;
 };
 
-// When player made to the river,
-// Player earn score and level would goes up
-// Add enemies's speed level every time the player win
-// Player automatically goes back to the starting position
-Player.prototype.gameLevel = function() {
-    if (this.playerLevel < 3){
-        this.playerScore += 30;
-        this.playerLevel ++ ;
-        this.speedLevel += 0.3;
-        this.reset();
-    } else if (this.playerLevel < 5) {
-        this.playerScore += 80;
-        this.playerLevel ++ ;
-        this.speedLevel += 0.5;
-        const bug4 = new Enemy(50, 80, 1);
-        allEnemies.push(bug4);
-        this.reset();
-    } else {
-        this.playerScore += 130;
-        this.playerLevel ++ ;
-        this.speedLevel += 0.8;
-        this.reset();
-    };
 
-    if (this.playerScore >= 300 && star === null) {
-        star = new Star();
-        star.intervalId = setInterval(function() {
-            star.isVisible = true;
-        }, Math.floor(Math.random() * 20000));
-    };
-};
-
-
-// TO DO: Add star to get bonus points.
-const Star = function(x, y) {
+// Star class that player can earn bonus point
+const Star = function(x, y, player) {
     this.x = x;
     this.y = y;
-
-    this.isVisible = false;
-    this.intervalId = null;
+    this.player = player;
 
     this.sprite = 'images/Star.png';
 };
@@ -175,35 +161,51 @@ Star.prototype.render = function() {
 Star.prototype.update = function(){
     if(this.y == player.y && this.x == player.x) {
         player.playerScore += 250;
-        clearInterval(this.intervalId); 
         this.collisionHappened();
     }
 };
 
 // star disappear
 Star.prototype.collisionHappened = function(){
-    this.generateStar();
+    this.x = 700;
+    this.y = 700;
+    if (player.y === 80){
+        this.generateStar();
+    }
 };
 
 // Star only appears the same rows as enemies
 Star.prototype.generateStar = function(){
-    this.x = 101 + Math.floor(Math.random() * 4);
-    this.y = 80 + Math.floor(Math.random() * 3);
+    const randomX = [0, 101, 202, 303,404];
+    const randomY = [80, 160, 240];
+    this.x = randomX[Math.floor(Math.random() * randomX.length)];
+    this.y = randomY[Math.floor(Math.random() * randomY.length)];
 };
 
+Star.prototype.reset = function() {
+   
+}
+
+
 //TO DO: Add heart to recover a life
+// heart class that player can earn extra life
+
+
+
 
 const bug1 = new Enemy(-101, 80, 30);
-const bug2 = new Enemy(404, 160, 10);
+const bug2 = new Enemy(404, 160, 8);
 const bug3 = new Enemy(101, 240, 15);
 
 // Place all enemy objects in an array called allEnemies
 const allEnemies = [];
 allEnemies.push(bug1, bug2, bug3);
 
-const player = new Player(this.xStart, this.yStart, allEnemies);
 
 const star = new Star(101, 80);
+
+const player = new Player(this.xStart, this.yStart, allEnemies);
+
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
