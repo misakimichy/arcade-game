@@ -31,12 +31,6 @@ var Engine = (function(global) {
     const modal = document.querySelector('.modal');
     const replay = document.querySelector('.modal-button');
 
-    replay.addEventListener('click', function(){
-        modal.classList.toggle('hide');
-        player.reset();
-        player.win = false;
-        win.requestAnimationFrame(main);
-    });
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -65,13 +59,21 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-        if (player.win === true) {
+        if (player.playerLives == 0) {
             win.cancelAnimationFrame(id);
             modal.classList.toggle('hide');
             
         } else {
             id = win.requestAnimationFrame(main);
-        }
+        };
+
+        //event listener for modal play again button
+        replay.addEventListener('click', function(){
+        modal.classList.remove('hide');
+        player.gameRestart();
+        id = win.requestAnimationFrame(main);
+    
+    });
     }
 
     /* This function does some initial setup that should only occur once,

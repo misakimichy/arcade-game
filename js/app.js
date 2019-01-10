@@ -11,8 +11,8 @@ const Enemy = function(x, y, speed, player) {
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
+// when enemy goes off the screen, enemy goes back to x = -101
 Enemy.prototype.update = function(dt){
-    //when enemy goes off the screen, enemy comes back to x = 0
     if (this.x < 505) {
         this.x += this.speed * Math.floor(Math.random()* 5 + 1) * dt + this.player.speedLevel;
     } else {
@@ -47,11 +47,6 @@ Enemy.prototype.collisionHappened = function() {
     this.player.playerLives -= 1;
     this.player.reset();
 
-    if (this.player.playerLives === 0) {
-        
-    }
-    //To do: stop the game loop when the playerLives=0
-    //To do: add game over modal
 };
 
 // Now write your own player class
@@ -143,6 +138,14 @@ Player.prototype.reset = function() {
     this.y = this.yStart;
 };
 
+Player.prototype.gameRestart = function() {
+    this.playerLives = 3;
+    this.playerScore = 0;
+    this.playerLevel = 1;
+    this.speedLevel = 1;
+    this.player.win = false;
+}
+
 
 // Star class that player can earn bonus point
 const Star = function(x, y, player) {
@@ -190,11 +193,6 @@ Star.prototype.reset = function() {
 
 //TODO - Add heart to recover a life
 // heart class that player can earn extra life
-
-
-
-//TODO - add game over modal and stop game loop
-// add play again button for the modal screen
 
 
 (function(window) {
