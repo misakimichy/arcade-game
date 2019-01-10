@@ -197,7 +197,8 @@ Star.prototype.reset = function() {
 // add play again button for the modal screen
 
 
-(function(global) {
+(function(window) {
+    console.log(window);
     const player = new Player(this.xStart, this.yStart);
     
     const bug1 = new Enemy(-101, 80, 30, player);
@@ -219,11 +220,11 @@ Star.prototype.reset = function() {
         player.handleInput(allowedKeys[e.keyCode]);
     });
 
-    // TODO - engine.js shouldnt rely on global scope - below is a hack.
+    // TODO - engine.js shouldnt rely on window scope - below is a hack.
     // to allow engine.js to use the allEnemies variable, define here.
     // note - this is *really* bad; instead, the Engine class should take 
     // its dependencies explicitly through dependency injection (passing to the constructor).
-    global.allEnemies = [bug1, bug2, bug3];
-    global.player = player;
-    global.star = star;
+    window.allEnemies = [bug1, bug2, bug3];
+    window.player = player;
+    window.star = star;
 })(this);

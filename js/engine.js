@@ -28,8 +28,15 @@ var Engine = (function(global) {
     canvas.height = 606;
     doc.body.appendChild(canvas);
 
-    const modal = document.querySelector('modal-bg');
-    const replay = document.querySelector('modal-button');
+    const modal = document.querySelector('.modal');
+    const replay = document.querySelector('.modal-button');
+
+    replay.addEventListener('click', function(){
+        modal.classList.toggle('hide');
+        player.reset();
+        player.win = false;
+        win.requestAnimationFrame(main);
+    });
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
