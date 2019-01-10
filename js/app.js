@@ -123,11 +123,11 @@ Player.prototype.gameLevel = function() {
         this.playerScore += 30;
         this.speedLevel += 0.2;
         
-    } else if (this.playerLevel < 5) {
+    } else if (this.playerLevel < 7) {
         this.playerScore += 80;
         this.speedLevel += 0.4;
-        const bug4 = new Enemy(50, 80, 0.8);
-        allEnemies.push(bug4);
+        // creating new bug doesn't work
+        //const bug4 = new Enemy(50, 80, 0.8);
     
     } else {
         this.playerScore += 130;
@@ -157,7 +157,7 @@ Star.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// check if player collect the star
+// check if player collects the star
 Star.prototype.update = function(){
     if(this.y == this.player.y && this.x == this.player.x) {
         this.player.playerScore += 250;
@@ -170,9 +170,9 @@ Star.prototype.collisionHappened = function(){
     this.x = 700;
     this.y = 700;
 
-    if (this.player.y === 80){
-        this.generateStar();
-    }
+    // if (this.player.y === 80){
+    //     this.generateStar();
+    // }
 };
 
 // Star only appears the same rows as enemies
@@ -188,8 +188,13 @@ Star.prototype.reset = function() {
 };
 
 
-//TO DO: Add heart to recover a life
+//TODO - Add heart to recover a life
 // heart class that player can earn extra life
+
+
+
+//TODO - add game over modal and stop game loop
+// add play again button for the modal screen
 
 
 (function(global) {
