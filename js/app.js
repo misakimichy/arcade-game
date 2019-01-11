@@ -8,7 +8,6 @@ const Enemy = function(x, y, speed, player) {
     this.sprite = 'images/enemy-bug.png';
 };
 
-
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 // when enemy goes off the screen, enemy goes back to x = -101
@@ -21,7 +20,6 @@ Enemy.prototype.update = function(dt){
     this.checkCollisions();
 };
 
-
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -32,7 +30,6 @@ Enemy.prototype.render = function() {
     ctx.fillText("Level: " + this.player.playerLevel, 420, 30);
 };
 
-// collision area:
 // Enemy and player should be in the same row (y axis)
 // x + some px < player.X (x axis, left side of player)
 // or x > player.x + some px (x axis, right side of player)
@@ -46,7 +43,6 @@ Enemy.prototype.checkCollisions = function() {
 Enemy.prototype.collisionHappened = function() {
     this.player.playerLives -= 1;
     this.player.reset();
-
 };
 
 // Now write your own player class
@@ -71,7 +67,7 @@ const Player = function(x, y) {
 // check player's position
 Player.prototype.update = function() {
     // Check win condition when player reach y=0
-    if (this.y === 0) {
+    if (this.y < 80) {
         this.win = true;
         this.gameLevel();
     }
@@ -107,10 +103,10 @@ Player.prototype.handleInput = function(keyPress) {
     }
 };
 
-// When player made to the river,
+// When the player got to the top
 // Player earn score depends on the player level
 // Add enemies' speed level every time the player wins
-// Player automatically goes back to the starting position
+// Reset player's position
 Player.prototype.gameLevel = function() {
     if (this.playerLevel < 3){
         this.playerScore += 30;
@@ -121,7 +117,6 @@ Player.prototype.gameLevel = function() {
         this.speedLevel += 0.4;
         // creating new bug doesn't work
         //const bug4 = new Enemy(50, 80, 0.8);
-    
     } else {
         this.playerScore += 130;
         this.speedLevel += 0.6;  
@@ -134,6 +129,7 @@ Player.prototype.gameLevel = function() {
 Player.prototype.reset = function() {
     this.x = this.xStart;
     this.y = this.yStart;
+    this.win = false;
 };
 
 Player.prototype.gameRestart = function() {
@@ -166,12 +162,14 @@ Star.prototype.update = function(){
     }
 };
 
-// star disappear
+// star disappear when collision happens 
+// re-generate when player wins
 Star.prototype.collisionHappened = function(){
     this.x = 700;
     this.y = 700;
 
-    if(this.player.win == true){
+    if(this.player.win === true){
+        console.log('win');
         this.generateStar();
     }
 };
@@ -182,10 +180,6 @@ Star.prototype.generateStar = function(){
     const randomY = [80, 160, 240];
     this.x = randomX[Math.floor(Math.random() * randomX.length)];
     this.y = randomY[Math.floor(Math.random() * randomY.length)];
-};
-
-Star.prototype.reset = function() {
-   
 };
 
 
@@ -210,10 +204,10 @@ Heart.prototype.update = function() {
 };
 
 Heart.prototype.collisionHappened = function(){
-    this.x = 700;
-    this.y = 700;
+    this.x = 1000;
+    this.y = 1000;
 
-    if(this.player.win == true){
+    if(this.player.win === true){
         this.generateHeart();
     }
 };
@@ -223,20 +217,21 @@ Heart.prototype.generateHeart = function(){
     const randomY = [80, 160, 240];
     this.x = randomX[Math.floor(Math.random() * randomX.length)];
     this.y = randomY[Math.floor(Math.random() * randomY.length)];
+};
+
+Heart.prototype.generateHeart = function(){
+    const randomX = [0, 101, 202, 303, 404];
+    const randomY = [80, 160, 240];
+    this.x = randomX[Math.floor(Math.random() * randomX.length)];
+    this.y = randomY[Math.floor(Math.random() * randomY.length)];
     if(this.randomX == star.randomX && this.randomY == star.randomY){
-        this.generateHeart();
+        this.star.generateStar();
     }
 };
 
 
-
-//TODO - Add heart to recover a life
-// heart class that player can earn extra life
-
-
 (function(window) {
-    console.log(window);
-    const player = new Player(this.xStart, this.yStart);
+    const player = new Player(this.xStart, this.yStart );
     
     const bug1 = new Enemy(-101, 80, 30, player);
     const bug2 = new Enemy(404, 160, 8, player);

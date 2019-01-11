@@ -22,15 +22,24 @@ var Engine = (function(global) {
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime,
-        id;
+        id; // add id for cancelAnimationFrame
 
     canvas.width = 505;
     canvas.height = 606;
     doc.body.appendChild(canvas);
 
+    //Add modal screen
     const modal = document.querySelector('.modal');
     const replay = document.querySelector('.modal-button');
 
+    //when the button is clicked, game should be reset and the game loop starts again
+    replay.addEventListener('click', function(engine){
+        modal.classList.toggle('hide');
+        win.requestAnimationFrame(main);
+        player.gameRestart();
+        star.generateStar();
+        heart.generateHeart();
+    });
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -59,19 +68,15 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
+
+         //When the player's life becomes 0, AnimationFrame should be cancel and modal screen shows up
         if (player.playerLives == 0) {
             win.cancelAnimationFrame(id);
             modal.classList.toggle('hide');
 
         } else {
-            id = win.requestAnimationFrame(main);
-        }
-
-        //when the play again button is clicked, game should be reset and the game loop starts again
-        replay.addEventListener('click', function(){
-            modal.classList.remove('hide');
-            player.gameRestart();
-        });
+            win.requestAnimationFrame(main);
+        }  
     }
 
     /* This function does some initial setup that should only occur once,
@@ -196,7 +201,6 @@ var Engine = (function(global) {
         'images/char-boy.png',
         'images/Star.png',
         'images/Heart.png'
-
     ]);
     Resources.onReady(init);
 
