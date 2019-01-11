@@ -81,8 +81,7 @@ Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// player moves a block when keypress happens
-// player should stay inside the canvas
+// player moves a block and stay inside of the canvas
 Player.prototype.handleInput = function(keyPress) {
     switch(keyPress) {
     case 'left':
@@ -107,7 +106,6 @@ Player.prototype.handleInput = function(keyPress) {
         break;
     }
 };
-
 
 // When player made to the river,
 // Player earn score depends on the player level
@@ -143,7 +141,7 @@ Player.prototype.gameRestart = function() {
     this.playerScore = 0;
     this.playerLevel = 1;
     this.speedLevel = 1;
-    this.player.win = false;
+    this.win = false;
 }
 
 
@@ -173,9 +171,9 @@ Star.prototype.collisionHappened = function(){
     this.x = 700;
     this.y = 700;
 
-    // if (this.player.y === 80){
-    //     this.generateStar();
-    // }
+    if(this.player.win == true){
+        this.generateStar();
+    }
 };
 
 // Star only appears the same rows as enemies
@@ -191,6 +189,47 @@ Star.prototype.reset = function() {
 };
 
 
+const Heart = function(x, y, player,star) {
+    this.x = x;
+    this.y = y;
+    this.player = player;
+    this.star = star;
+
+    this.sprite = 'images/Heart.png';
+};
+
+Heart.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+Heart.prototype.update = function() {
+    if(this.y == this.player.y && this.x == this.player.x) {
+        this.player.playerLives ++;
+        this.collisionHappened();
+    }
+};
+
+Heart.prototype.collisionHappened = function(){
+    this.x = 700;
+    this.y = 700;
+
+    if(this.player.win == true){
+        this.generateHeart();
+    }
+};
+
+Heart.prototype.generateHeart = function(){
+    const randomX = [0, 101, 202, 303, 404];
+    const randomY = [80, 160, 240];
+    this.x = randomX[Math.floor(Math.random() * randomX.length)];
+    this.y = randomY[Math.floor(Math.random() * randomY.length)];
+    if(this.randomX == star.randomX && this.randomY == star.randomY){
+        this.generateHeart();
+    }
+};
+
+
+
 //TODO - Add heart to recover a life
 // heart class that player can earn extra life
 
@@ -204,7 +243,8 @@ Star.prototype.reset = function() {
     const bug3 = new Enemy(101, 240, 15, player);
     
     const star = new Star(101, 80, player); 
-    
+    const heart = new Heart(303, 160, player, star);
+
     // This listens for key presses and sends the keys to your
     // Player.handleInput() method. You don't need to modify this.
     document.addEventListener('keyup', function(e) {
@@ -225,4 +265,5 @@ Star.prototype.reset = function() {
     window.allEnemies = [bug1, bug2, bug3];
     window.player = player;
     window.star = star;
+    window.heart = heart;
 })(this);

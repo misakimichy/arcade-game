@@ -62,18 +62,16 @@ var Engine = (function(global) {
         if (player.playerLives == 0) {
             win.cancelAnimationFrame(id);
             modal.classList.toggle('hide');
-            
+
         } else {
             id = win.requestAnimationFrame(main);
-        };
+        }
 
-        //event listener for modal play again button
+        //when the play again button is clicked, game should be reset and the game loop starts again
         replay.addEventListener('click', function(){
-        modal.classList.remove('hide');
-        player.gameRestart();
-        id = win.requestAnimationFrame(main);
-    
-    });
+            modal.classList.remove('hide');
+            player.gameRestart();
+        });
     }
 
     /* This function does some initial setup that should only occur once,
@@ -113,6 +111,7 @@ var Engine = (function(global) {
         });
         player.update();
         star.update();
+        heart.update();
     }
 
     /* This function initially draws the "game level", it will then call
@@ -174,6 +173,7 @@ var Engine = (function(global) {
 
         player.render();
         star.render();
+        heart.render();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -194,7 +194,9 @@ var Engine = (function(global) {
         'images/grass-block.png',
         'images/enemy-bug.png',
         'images/char-boy.png',
-        'images/Star.png'
+        'images/Star.png',
+        'images/Heart.png'
+
     ]);
     Resources.onReady(init);
 
