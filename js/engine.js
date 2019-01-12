@@ -37,8 +37,8 @@ var Engine = (function(global) {
         modal.classList.toggle('hide');
         win.requestAnimationFrame(main);
         player.gameRestart();
-        star.generateStar();
-        heart.generateHeart();
+        star.place();
+        heart.place();
     });
 
     /* This function serves as the kickoff point for the game loop itself

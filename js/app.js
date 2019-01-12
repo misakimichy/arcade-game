@@ -146,14 +146,11 @@ Player.prototype.gameRestart = function() {
 
 
 // Star class that player can earn bonus points
-const Star = function(x, y, player) {
-    this.x = x;
-    this.y = y;
+const Star = function(player) {
     this.player = player;
-    this.randomX = [0, 101, 202, 303, 404];
-    this.randomY = [80, 160, 240];
-
     this.sprite = 'images/Star.png';
+    this.x, this.y = null;
+    this.place();
 };
 
 Star.prototype.render = function() {
@@ -168,7 +165,7 @@ Star.prototype.update = function(){
     }
 
     if(this.player.win == true){
-        this.generateStar();
+        this.place();
     }
 };
 
@@ -180,20 +177,22 @@ Star.prototype.collisionHappened = function(){
 };
 
 // Star only appears the same rows as enemies
-Star.prototype.generateStar = function(){
-    this.x = this.randomX[Math.floor(Math.random() * this.randomX.length)];
-    this.y = this.randomY[Math.floor(Math.random() * this.randomY.length)];
+Star.prototype.place = function(){
+    const randomX = [0, 101, 202, 303, 404];
+    const randomY = [80, 160, 240];
+    this.x = randomX[Math.floor(Math.random() * randomX.length)];
+    this.y = randomY[Math.floor(Math.random() * randomY.length)];
 };
 
 
 // Heart class that player can recover a life
-const Heart = function(x, y, player,star) {
-    this.x = x;
-    this.y = y;
+const Heart = function(player,star) {
     this.player = player;
     this.star = star;
+    this.x, this.y = null;
 
     this.sprite = 'images/Heart.png';
+    this.place();
 };
 
 Heart.prototype.render = function() {
@@ -207,7 +206,7 @@ Heart.prototype.update = function() {
     }
 
     if(this.player.win == true){
-        this.generateHeart();
+        this.place();
     }
 };
 
@@ -216,7 +215,7 @@ Heart.prototype.collisionHappened = function(){
     this.y = 700;
 };
 
-Heart.prototype.generateHeart = function(){
+Heart.prototype.place = function(){
     const randomX = [0, 101, 202, 303, 404];
     const randomY = [80, 160, 240];
     this.x = randomX[Math.floor(Math.random() * randomX.length)];
@@ -224,7 +223,7 @@ Heart.prototype.generateHeart = function(){
 
     // regenerate star when the heart will be same place as a star
     if(this.x == this.star.x && this.y == this.star.y){
-        this.star.generateStar();
+        this.star.place();
     }
 };
 
@@ -236,8 +235,8 @@ Heart.prototype.generateHeart = function(){
     const bug2 = new Enemy(404, 160, 8, player);
     const bug3 = new Enemy(101, 240, 15, player);
     
-    const star = new Star(404, 80, player); 
-    const heart = new Heart(303, 160, player, star);
+    const star = new Star(player); 
+    const heart = new Heart(player, star);
 
     // This listens for key presses and sends the keys to your
     // Player.handleInput() method. You don't need to modify this.
