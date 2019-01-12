@@ -42,6 +42,7 @@ Enemy.prototype.checkCollisions = function() {
 //When collision happens, player loses a life and back to the start position.
 Enemy.prototype.collisionHappened = function() {
     this.player.playerLives -= 1;
+    this.player.playerScore -= 50;
     this.player.reset();
 };
 
@@ -113,19 +114,19 @@ Player.prototype.gameLevel = function() {
         this.speedLevel += 0.2;
         
     } else if (this.playerLevel < 7) {
-        this.playerScore += 80;
+        this.playerScore += 60;
         this.speedLevel += 0.4;
         // creating new bug doesn't work
         //const bug4 = new Enemy(50, 80, 0.8);
     } else {
-        this.playerScore += 130;
+        this.playerScore += 120;
         this.speedLevel += 0.6;  
     };
     this.playerLevel ++ ;
+    // make a little time rag for win = true
     setTimeout(() => {
         this.reset();
     }, 5);
-    
 };
 
 // reset player's position
@@ -149,6 +150,8 @@ const Star = function(x, y, player) {
     this.x = x;
     this.y = y;
     this.player = player;
+    this.randomX = [0, 101, 202, 303, 404];
+    this.randomY = [80, 160, 240];
 
     this.sprite = 'images/Star.png';
 };
@@ -178,10 +181,8 @@ Star.prototype.collisionHappened = function(){
 
 // Star only appears the same rows as enemies
 Star.prototype.generateStar = function(){
-    const randomX = [0, 101, 202, 303, 404];
-    const randomY = [80, 160, 240];
-    this.x = randomX[Math.floor(Math.random() * randomX.length)];
-    this.y = randomY[Math.floor(Math.random() * randomY.length)];
+    this.x = this.randomX[Math.floor(Math.random() * this.randomX.length)];
+    this.y = this.randomY[Math.floor(Math.random() * this.randomY.length)];
 };
 
 
@@ -210,7 +211,6 @@ Heart.prototype.update = function() {
     }
 };
 
- //TODO - fix the regenerate star
 Heart.prototype.collisionHappened = function(){
     this.x = 700;
     this.y = 700;
@@ -222,7 +222,8 @@ Heart.prototype.generateHeart = function(){
     this.x = randomX[Math.floor(Math.random() * randomX.length)];
     this.y = randomY[Math.floor(Math.random() * randomY.length)];
 
-    if(this.randomX == this.star.randomX && this.randomY == this.star.randomY){
+    // regenerate star when the heart will be same place as a star
+    if(this.x == this.star.x && this.y == this.star.y){
         this.star.generateStar();
     }
 };
@@ -260,3 +261,9 @@ Heart.prototype.generateHeart = function(){
     window.star = star;
     window.heart = heart;
 })(this);
+
+//Additional idea
+
+//Star appear in a random level
+//Heart appear in a random level when the life < 3
+//Change enemy speed in a random level
