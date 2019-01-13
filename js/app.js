@@ -147,13 +147,12 @@ class Player {
     }
 }
 
-// Star class that player can earn bonus points
-class Star {
+// Reward class
+class Reward {
     constructor(player) {
         this.player = player;
-        this.sprite = 'images/Star.png';
         this.x, this.y = null;
-        this.place();
+        this.sprite = null;
     }
 
     render() {
@@ -163,57 +162,15 @@ class Star {
     update() {
         if(this.y == this.player.y && this.x == this.player.x) {
             this.player.playerScore += 250;
-            this.collisionHappened();
+            this.disappear();
         }
 
         if(this.player.win == true){
             this.place();
         }
     }
-
-    // star disappear when collision happens 
-    // re-generate when player wins
-    collisionHappened() {
-        this.x = 700;
-        this.y = 700;
-    }
-
-    place(){
-        const randomX = [0, 101, 202, 303, 404];
-        const randomY = [80, 160, 240];
-        this.x = randomX[Math.floor(Math.random() * randomX.length)];
-        this.y = randomY[Math.floor(Math.random() * randomY.length)];
-    }
-}
-
-
-// Heart class that player can recover a life
-class Heart {
-    constructor(player,star){
-        this.player = player;
-        this.star = star;
-        this.x, this.y = null;
-
-        this.sprite = 'images/Heart.png';
-        this.place();
-    }
-
-    render() {
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    }
-
-    update() {
-        if(this.y == this.player.y && this.x == this.player.x) {
-            this.player.playerLives ++;
-            this.collisionHappened();
-        }
-
-        if(this.player.win == true){
-            this.place();
-        }
-    }
-
-    collisionHappened() {
+    
+    disappear() {
         this.x = 700;
         this.y = 700;
     }
@@ -223,7 +180,28 @@ class Heart {
         const randomY = [80, 160, 240];
         this.x = randomX[Math.floor(Math.random() * randomX.length)];
         this.y = randomY[Math.floor(Math.random() * randomY.length)];
+    }
+}
 
+// Star class that player can earn bonus points
+class Star extends Reward {
+    constructor(player) {
+        super(player);
+        this.sprite = 'images/Star.png';
+        this.place();
+    }
+}
+
+// Heart class that player can recover a life
+class Heart extends Reward {
+    constructor(player,star) {
+        super(player);
+        this.star = star;
+        this.sprite = 'images/Heart.png';
+        this.place();
+    }
+    place() {
+        super.place();
         // regenerate star when the heart will be same place as a star
         if(this.x == this.star.x && this.y == this.star.y){
             this.star.place();
