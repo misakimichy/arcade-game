@@ -1,12 +1,14 @@
 // Enemies our player must avoid
 class Enemy {
-    constructor(x, y, speed, player) {
-        this.x = x;
+    constructor(y, player) {
         this.y = y;
-        this.speed = speed;
         this.player = player;
-
+        this.speed = null;
+        this.x = null;
+        
         this.sprite = 'images/enemy-bug.png';
+
+        this.place();
     }
     // Update the enemy's position, required method for game
     // Parameter: dt, a time delta between ticks
@@ -25,9 +27,15 @@ class Enemy {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
         ctx.fillStyle = "black";
         ctx.font = "20px Helvetica";
-        ctx.fillText("Life: " + this.player.playerLives, 20, 30);
+        ctx.fillText("Life: " + this.player.playerLives, 20, 30)
         ctx.fillText("Score: "  + this.player.playerScore, 220, 30);
         ctx.fillText("Level: " + this.player.playerLevel, 420, 30);
+    }
+
+    place() {
+        const randomX = [0, 101, 202, 303, 404];
+        this.x = randomX[Math.floor(Math.random() * randomX.length)];
+        this.speed = Math.floor(Math.random()* 30) + 1;
     }
 
     // Enemy and player should be in the same row (y axis)
@@ -35,12 +43,12 @@ class Enemy {
     // or x > player.x + some px (x axis, right side of player)
     checkCollisions() {
         if (this.y === this.player.y && this.x + 60 > this.player.x && this.x < this.player.x + 30) {
-            this.collisionHappened();
+            this.disappear();
         }
     }
 
     //When collision happens, player loses a life and back to the start position.
-    collisionHappened() {
+    disappear() {
         this.player.playerLives -= 1;
         this.player.playerScore -= 50;
         this.player.reset();
@@ -160,11 +168,6 @@ class Reward {
     }
 
     update() {
-        if(this.y == this.player.y && this.x == this.player.x) {
-            this.player.playerScore += 250;
-            this.disappear();
-        }
-
         if(this.player.win == true){
             this.place();
         }
@@ -190,6 +193,14 @@ class Star extends Reward {
         this.sprite = 'images/Star.png';
         this.place();
     }
+
+    update() {
+        super.update();
+        if(this.y == this.player.y && this.x == this.player.x) {
+            this.player.playerScore += 250;
+            this.disappear();
+        }
+    }
 }
 
 // Heart class that player can recover a life
@@ -200,6 +211,15 @@ class Heart extends Reward {
         this.sprite = 'images/Heart.png';
         this.place();
     }
+
+    update() {
+        super.update();
+        if(this.y == this.player.y && this.x == this.player.x) {
+            this.player.playerLives++;
+            this.disappear();
+        }
+    }
+
     place() {
         super.place();
         // regenerate star when the heart will be same place as a star
@@ -212,9 +232,9 @@ class Heart extends Reward {
 (function(window) {
     const player = new Player(303, 400);
     
-    const bug1 = new Enemy(-101, 80, 30, player);
-    const bug2 = new Enemy(404, 160, 8, player);
-    const bug3 = new Enemy(101, 240, 15, player);
+    const bug1 = new Enemy(80, player);
+    const bug2 = new Enemy(160, player);
+    const bug3 = new Enemy(240, player);
     
     const star = new Star(player); 
     const heart = new Heart(player, star);
