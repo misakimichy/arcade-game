@@ -19,7 +19,6 @@ class Enemy {
         } else {
             this.x = -101;
         }
-        this.checkCollisions();
     }
 
     // Draw the enemy on the screen, required method for game
@@ -44,12 +43,12 @@ class Enemy {
     // or x > player.x + some px (x axis, right side of player)
     checkCollisions() {
         if (this.y === this.player.y && this.x + 60 > this.player.x && this.x < this.player.x + 30) {
-            this.disappear();
+            this.crush();
         }
     }
 
     //When collision happens, player loses a life and back to the start position.
-    disappear() {
+    crush() {
         this.player.playerLives -= 1;
         this.player.playerScore -= 50;
         this.player.reset();
@@ -71,7 +70,7 @@ class Player {
         this.playerLives = 3;
         this.playerScore = 0;
         this.playerLevel = 1;
-        this.speedLevel = 1;    //change the enemy's speed level
+        this.speedLevel = null;    //change the enemy's speed level
         this.sprite = 'images/char-boy.png';
     }
 
