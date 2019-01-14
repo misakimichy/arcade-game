@@ -256,8 +256,6 @@ class Heart extends Reward {
 
     // TODO - engine.js shouldnt rely on window scope - below is a hack.
     // to allow engine.js to use the allEnemies variable, define here.
-    // note - this is *really* bad; instead, the Engine class should take 
-    // its dependencies explicitly through dependency injection (passing to the constructor).
     window.allEnemies = [bug1, bug2, bug3];
     window.player = player;
     window.star = star;
