@@ -27,11 +27,12 @@ class Enemy {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
         ctx.fillStyle = "black";
         ctx.font = "20px Helvetica";
-        ctx.fillText("Life: " + this.player.playerLives, 20, 30)
+        ctx.fillText("Life: " + this.player.playerLives, 20, 30);
         ctx.fillText("Score: "  + this.player.playerScore, 220, 30);
         ctx.fillText("Level: " + this.player.playerLevel, 420, 30);
     }
 
+    //Enemies appear in different X with different speed
     place() {
         const randomX = [0, 101, 202, 303, 404];
         this.x = randomX[Math.floor(Math.random() * randomX.length)];
@@ -56,8 +57,7 @@ class Enemy {
 }
 
 // Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+// This class requires an update(), render() and a handleInput() method.
 class Player {
     constructor(x, y) {
         this.xMove = 101;
@@ -77,7 +77,7 @@ class Player {
 
     // check player's position
     update() {
-        // Check win condition when player reach y=0
+        // Check win condition when player reach to the top
         if (this.y  < 80) {
             this.win = true;
             this.gameLevel(); 
@@ -123,13 +123,13 @@ class Player {
             this.playerScore += 30;
             this.speedLevel += 0.2;
             
-        } else if (this.playerLevel < 7) {
-            this.playerScore += 60;
+        } else if (this.playerLevel < 10) {
+            this.playerScore += 40;
             this.speedLevel += 0.4;
             // creating new bug doesn't work
             //const bug4 = new Enemy(50, 80, 0.8);
         } else {
-            this.playerScore += 120;
+            this.playerScore += 80;
             this.speedLevel += 0.6;  
         };
         this.playerLevel ++ ;
@@ -166,12 +166,6 @@ class Reward {
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
-
-    update() {
-        if(this.player.win == true){
-            this.place();
-        }
-    }
     
     disappear() {
         this.x = 700;
@@ -186,16 +180,20 @@ class Reward {
     }
 }
 
-// Star class that player can earn bonus points
+// Star subclass
 class Star extends Reward {
     constructor(player) {
         super(player);
         this.sprite = 'images/Star.png';
-        this.place();
+
+        this.update();
     }
 
     update() {
-        super.update();
+        if(this.player.win == true && this.player.playerLevel > 5){
+            super.place();
+        }
+        
         if(this.y == this.player.y && this.x == this.player.x) {
             this.player.playerScore += 250;
             this.disappear();
@@ -203,17 +201,21 @@ class Star extends Reward {
     }
 }
 
-// Heart class that player can recover a life
+// Heart subclass
 class Heart extends Reward {
     constructor(player,star) {
         super(player);
         this.star = star;
         this.sprite = 'images/Heart.png';
-        this.place();
+
+        this.update();
     }
 
     update() {
-        super.update();
+        if(this.player.win == true && this.player.playerLives < 3){
+            this.place();
+        }
+
         if(this.y == this.player.y && this.x == this.player.x) {
             this.player.playerLives++;
             this.disappear();
@@ -261,9 +263,3 @@ class Heart extends Reward {
     window.star = star;
     window.heart = heart;
 })(this);
-
-//Additional idea
-
-//Star appear in a random level
-//Heart appear in a random level when the life < 3
-//Change enemy speed in a random level
