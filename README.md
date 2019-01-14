@@ -10,7 +10,7 @@
 This is a project of Front-End Web developer nanodegree by Udacity.
 I made this arcade game following Udacity's requiremnts [rubric](https://review.udacity.com/#!/rubrics/15/view) and using provided code and images.
 
-![alt screenshot of the game](images/screenshot.png)
+![alt screenshot of the game](screenshot/screenshot.png)
 
 - Use your arrrow keys to move.
 - Every time you reach the top of screen, the game difficulty increases.
