@@ -19,6 +19,7 @@ class Enemy {
         } else {
             this.x = -101;
         }
+        this.checkCollisions();
     }
 
     // Draw the enemy on the screen, required method for game
@@ -70,7 +71,7 @@ class Player {
         this.playerLives = 3;
         this.playerScore = 0;
         this.playerLevel = 1;
-        this.speedLevel = null;    //change the enemy's speed level
+        this.speedLevel = 0.8;    //change the enemy's speed level
         this.sprite = 'images/char-boy.png';
     }
 
