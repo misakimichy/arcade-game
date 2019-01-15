@@ -25,11 +25,6 @@ class Enemy {
     // Draw the enemy on the screen, required method for game
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-        ctx.fillStyle = "black";
-        ctx.font = "20px Helvetica";
-        ctx.fillText("Life: " + this.player.playerLives, 20, 30);
-        ctx.fillText("Score: "  + this.player.playerScore, 220, 30);
-        ctx.fillText("Level: " + this.player.playerLevel, 420, 30);
     }
 
     //Enemies appear in different X with different speed
@@ -86,6 +81,11 @@ class Player {
 
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+        ctx.fillStyle = "black";
+        ctx.font = "20px Helvetica";
+        ctx.fillText("Life: " + this.player.playerLives, 20, 30);
+        ctx.fillText("Score: "  + this.player.playerScore, 220, 30);
+        ctx.fillText("Level: " + this.player.playerLevel, 420, 30);
     }
 
     // player moves a block and stay inside of the canvas
@@ -94,22 +94,22 @@ class Player {
         case 'left':
             if (this.x > 0) {
                 this.x -= this.xMove;
-            };
+            }
             break;
         case 'up':
             if (this.y > 0) {
             this.y -= this.yMove;
-            };
+            }
             break;
         case 'right':
             if (this.x < this.xMove * 4){
             this.x += this.xMove;
-            };
+            }
             break;
         case 'down':
             if (this.y < this.yMove * 5){
             this.y += this.yMove;
-            };
+            }
             break;
         }
     }
@@ -131,7 +131,7 @@ class Player {
         } else {
             this.playerScore += 80;
             this.speedLevel += 0.6;  
-        };
+        }
         this.playerLevel ++ ;
         // make a little time rag for win = true
         setTimeout(() => {
