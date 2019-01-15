@@ -22,7 +22,7 @@ I made this arcade game following Udacity's requirements [rubric](https://review
 ## Installation
 1. Please use the following command to download
 ```
-git clone https://github.com/misakimichy/arcade-game
+git clone https://github.com/misakimichy/arcade-game.git
 ```
 
 2. Open index.html in your browser and you're ready to play.
