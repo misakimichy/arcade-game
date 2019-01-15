@@ -83,9 +83,9 @@ class Player {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
         ctx.fillStyle = "black";
         ctx.font = "20px Helvetica";
-        ctx.fillText("Life: " + this.player.playerLives, 20, 30);
-        ctx.fillText("Score: "  + this.player.playerScore, 220, 30);
-        ctx.fillText("Level: " + this.player.playerLevel, 420, 30);
+        ctx.fillText("Life: " + this.playerLives, 20, 30);
+        ctx.fillText("Score: "  + this.playerScore, 220, 30);
+        ctx.fillText("Level: " + this.playerLevel, 420, 30);
     }
 
     // player moves a block and stay inside of the canvas
