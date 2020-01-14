@@ -5,11 +5,11 @@
 - [Instructions](#instructions)
 - [Installation](#installation)
 
-
 ## Instructions
 This is a project of Front-End Web developer Nanodegree by Udacity.
 I made this arcade game following Udacity's requirements [rubric](https://review.udacity.com/#!/rubrics/15/view) and using provided code and images.
 
+Play from [here](https://misakimichy.github.io/arcade-game/)
 ![alt screenshot of the game](screenshot/screenshot.png)
 
 - Use your arrow keys to move.
